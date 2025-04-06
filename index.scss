@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Reenie+Beanie&display=swap');
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+:root {
+  --photo-width: 300px;
+  --photo-height: 350px;
+  --image-margin: 8%;
+  --rotate: 0;
+  --image-size: calc(var(--photo-width) - (var(--image-margin) * 2));
+  --transition: 1000ms;
+  --micro-transition: 250ms;
+}
+
+body {
+  background: #f2f2f2;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.main {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.photo {
+  position: absolute;
+  top: var(--top);
+  left: var(--left);
+  width: var(--photo-width);
+  height: var(--photo-height);
+  z-index: var(--z-index);
+  cursor: pointer;
+  perspective: 1000px;
+
+  .shadow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgb(146, 161, 176);
+    opacity: 0.6;
+    filter: blur(4px);
+    transform: translate(1%, 1%) rotate(var(--rotate));
+    transition: transform var(--transition), opacity var(--micro-transition) var(--transition);
+  }
+
+  .content {
+    width: 100%;
+    height: 100%;
+  }
+
+  .container,
+  .shadow {
+    transform-style: preserve-3d;
+  }
+
+  .container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #FFF;
+    transform: rotate(var(--rotate));
+    border-radius: 0.25rem;
+    transition: transform var(--transition), box-shadow var(--micro-transition) var(--transition);
+  }
+
+  .front,
+  .back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+  }
+
+  .back {
+    padding: var(--image-margin);
+    transform: rotateY(180deg);
+    font-family: 'Reenie Beanie', cursive;
+    color: #545454;
+    font-size: xx-large;
+  }
+
+  .image {
+    margin: var(--image-margin);
+    width: var(--image-size);
+    height: var(--image-size);
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+  .title {
+    color: #323232;
+    margin-top: -0.5rem;
+    padding: 0 var(--image-margin);
+    text-align: center;
+    font-family: 'Gochi Hand', cursive;
+    font-size: xx-large;
+  }
+
+  &:not(.is-dragging) {
+    transition: top var(--transition), left var(--transition), transform var(--transition);
+  }
+
+  &.drag-up {
+    transition: transform var(--micro-transition);
+
+    .shadow {
+      transition: opacity var(--micro-transition);
+    }
+  }
+
+  &.is-rotating {
+
+    .shadow,
+    .container {
+      transition: none;
+    }
+  }
+
+
+  &.is-dragging {
+    transform: scale(1.1);
+
+    .shadow {
+      opacity: 0.25;
+    }
+  }
+
+  &.is-open {
+    z-index: 1000 !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate3d(-50%, -50%, 0) !important;
+
+    &.to-right {
+      --rotate: 0 !important;
+    }
+
+    &.to-left {
+      --rotate: 360deg !important;
+    }
+  }
+
+  &.flip {
+    .container {
+      transform: scale(1.2) rotateY(180deg);
+      box-shadow: 0 2px 8px rgb(146, 161, 176, 0.3);
+      transition: transform var(--transition), box-shadow var(--micro-transition);
+    }
+
+    .shadow {
+      opacity: 0;
+      transition: transform var(--transition), opacity var(--micro-transition);
+    }
+  }
+}
