@@ -19,6 +19,7 @@ class CardElement extends HTMLElement {
     this.image = image
   }
 
+  // add event listeners
   connectedCallback() {
     this.render()
     this.randomCoordinate()
@@ -29,6 +30,7 @@ class CardElement extends HTMLElement {
     this.addEventListener('wheel', this)
   }
 
+  // remove event listeners 
   disconnectedCallback() {
     this.removeEventListener('mousedown', this)
     this.removeEventListener('mousemove', this)
@@ -37,7 +39,38 @@ class CardElement extends HTMLElement {
     this.removeEventListener('mouseleave', this)
   }
 
+  // handling events
+  handleEvent = (event) => {
+    switch (event.type) {
+      case 'mousedown':
+        this.dragStart(event)
+        break
+      case 'mousemove':
+        this.dragMove(event)
+        break
+      case 'mouseup':
+        this.dragEnd(event)
+        break
+      case 'mouseleave':
+        this.dragEnd(event)
+        break
+      case 'wheel':
+        this.handleWheel(event)
+        break
+    }
+  }
+  handleEvent = (event) => {}
 
+  // setting position
+  setPosition = (x, y, z) => {
+    const styles = `
+      --left    : ${x}px;
+      --top     : ${y}px;
+      --rotate  : ${z}deg;
+      --z-index : ${this.zIndex};
+    `
+    this.setAttribute('style', styles)
+  }
 
   render() {
     this.classList.add('photo')
