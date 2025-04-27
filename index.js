@@ -1,22 +1,30 @@
+const openClass = "is-open";
+const flipClass = "flip";
+
+const cardStatus = {
+  index: 0,
+  active: null,
+};
+
 class CardElement extends HTMLElement {
-  dragStartX = 0
-  dragStartY = 0
-  dragEndX = 0
-  dragEndY = 0
-  dragPrevX = 0
-  dragPrevY = 0
-  objInitLeft = 0
-  objInitTop = 0
-  inDrag = false
+  dragStartX = 0;
+  dragStartY = 0;
+  dragEndX = 0;
+  dragEndY = 0;
+  dragPrevX = 0;
+  dragPrevY = 0;
+  objInitLeft = 0;
+  objInitTop = 0;
+  inDragging = false;
 
   rotate = 0
   zIndex = 0
 
   constructor(title, description, image) {
     super();
-    this.title = title
-    this.description = description
-    this.image = image
+    this.title = title;
+    this.description = description;
+    this.image = image;
   }
 
   // add event listeners
@@ -59,7 +67,6 @@ class CardElement extends HTMLElement {
         break
     }
   }
-  handleEvent = (event) => {}
 
   // setting position
   setPosition = (x, y, z) => {
@@ -69,10 +76,23 @@ class CardElement extends HTMLElement {
       --rotate  : ${z}deg;
       --z-index : ${this.zIndex};
     `
-    this.setAttribute('style', styles)
-  }
+    this.setAttribute('style', styles);
+  };
 
-  render() {
+  startDrag = (e) => {
+    this.inDrag = true;
+    this.dragStartX = e.pageX
+    this.dragStartY = e.pageY
+    this.setToFront();
+  };
+
+  setToFront = () => {
+    if (this.zIndex >= cardStatus.index && this.zIndex !== 0) {
+      return
+    }
+  };
+
+  render = () => {
     this.classList.add('photo')
     this.innerHTML = `
       <div class="shadow"></div>
