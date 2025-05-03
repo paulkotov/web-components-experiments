@@ -98,6 +98,12 @@ class CardElement extends HTMLElement {
     this.setToFront();
   };
 
+  stopDrag = () => {
+    this.inDrag = false;
+    this.dragPrevX = this.dragEndX;
+    this.dragPrevY = this.dragEndY;
+  };
+
   setToFront = () => {
     // if card is already on top
     if (this.zIndex >= cardStatus.index && this.zIndex !== 0) {
