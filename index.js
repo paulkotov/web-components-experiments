@@ -1,6 +1,7 @@
 const openClass = "is-open";
 const flipClass = "flip";
 
+// current card status
 const cardStatus = {
   index: 0,
   active: null,
@@ -29,8 +30,8 @@ class CardElement extends HTMLElement {
 
   // add event listeners
   connectedCallback() {
-    this.render()
-    this.randomCoordinate()
+    this.render();
+    this.setRandomCoordinate();
     this.addEventListener('mousedown', this)
     this.addEventListener('mousemove', this)
     this.addEventListener('mouseup', this)
@@ -51,20 +52,31 @@ class CardElement extends HTMLElement {
   handleEvent = (event) => {
     switch (event.type) {
       case 'mousedown':
-        this.dragStart(event)
-        break
+        this.startDrag(event);
+        break;
       case 'mousemove':
-        this.dragMove(event)
+        this.moveDrag(event);
         break
       case 'mouseup':
-        this.dragEnd(event)
-        break
+        if (
+          this.dragPrevX === this.dragEndX &&
+          this.dragPrevY === this.dragEndY
+        ) {
+          if (this.classList.contains(openClass)) {
+            cardStatus.active = null;
+            this.close();
+          } else {
+            this.open();
+          }
+        }
+        this.stopDrag();
+        break;
       case 'mouseleave':
-        this.dragEnd(event)
-        break
+        this.stopDrag();
+        break;
       case 'wheel':
-        this.handleWheel(event)
-        break
+        // handle wheel event
+        break;
     }
   }
 
@@ -86,14 +98,27 @@ class CardElement extends HTMLElement {
     this.setToFront();
   };
 
-  setToFront = () => {
-    if (this.zIndex >= cardStatus.index && this.zIndex !== 0) {
-      return
-    }
+  stopDrag = () => {
+    this.inDrag = false;
+    this.dragPrevX = this.dragEndX;
+    this.dragPrevY = this.dragEndY;
   };
 
+  setToFront = () => {
+    // if card is already on top
+    if (this.zIndex >= cardStatus.index && this.zIndex !== 0) {
+      return null;
+    }
+    // need to set to top
+  };
+
+  setRandomCoordinate = () => {
+    // set random position
+  };
+
+  // render card markdown
   render = () => {
-    this.classList.add('photo')
+    this.classList.add('photo');
     this.innerHTML = `
       <div class="shadow"></div>
       <div class="content">
@@ -107,8 +132,8 @@ class CardElement extends HTMLElement {
           </div>
         </div>
       </div>
-    `
-  }
+    `;
+  };
 }
 
 customElements.define('card-element', CardElement)
