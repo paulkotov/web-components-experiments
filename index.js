@@ -104,6 +104,24 @@ class CardElement extends HTMLElement {
     this.dragPrevY = this.dragEndY;
   };
 
+  open = () => {
+    if (this.classList.contains('is-dragging')) {
+      return;
+    }
+    this.closeActiveCard();
+    cardStatus.active = cards.indexOf(this);
+    this.setInFront();
+    this.classList.add(openClass);
+    setTimeout(() => {
+      this.classList.add(flipClass)
+    }, 1000);
+  };
+
+  close = () => {
+    this.classList.remove(flipClass, openClass);
+    this.setInFront();
+  };
+
   setToFront = () => {
     // if card is already on top
     if (this.zIndex >= cardStatus.index && this.zIndex !== 0) {
