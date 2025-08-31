@@ -7,6 +7,64 @@ const cardStatus = {
   active: null,
 };
 
+const cardInnerStyles = `
+  <style>
+    .shadow {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgb(146, 161, 176);
+      opacity: 0.6;
+      filter: blur(4px);
+      transform: translate(1%, 1%) rotate(var(--rotate));
+      transition: transform var(--transition), opacity var(--micro-transition) var(--transition);
+    }
+    .content {
+      width: 100%;
+      height: 100%;
+    }
+    .container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: #FFF;
+      transform: rotate(var(--rotate));
+      border-radius: 0.25rem;
+      transition: transform var(--transition), box-shadow var(--micro-transition) var(--transition);
+      transform-style: preserve-3d;
+    }
+    .front,
+    .back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+    }
+    .back {
+      padding: var(--image-margin);
+      transform: rotateY(180deg);
+      font-family: 'Reenie Beanie', cursive;
+      color: #545454;
+      font-size: xx-large;
+    }
+    .image {
+      margin: var(--image-margin);
+      width: var(--image-size);
+      height: var(--image-size);
+      object-fit: cover;
+      pointer-events: none;
+    }
+    .title {
+      color: #323232;
+      margin-top: -0.5rem;
+      padding: 0 var(--image-margin);
+      text-align: center;
+      font-family: 'Gochi Hand', cursive;
+      font-size: xx-large;
+    }
+  </style>
+`;
+
 class CardElement extends HTMLElement {
   dragStartX = 0;
   dragStartY = 0;
@@ -138,6 +196,7 @@ class CardElement extends HTMLElement {
   render = () => {
     this.classList.add('photo');
     this.innerHTML = `
+      ${cardInnerStyles}
       <div class="shadow"></div>
       <div class="content">
         <div class="container">
